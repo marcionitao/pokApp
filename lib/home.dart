@@ -13,6 +13,9 @@ class MyHomePage extends StatefulWidget {
 
 class MyHomePageState extends State<MyHomePage> {
 
+  // definimos a nossa cor - (0xFF)#b800b8
+  final magenta = const Color(0xFFB800B8);
+
   var url = "https://raw.githubusercontent.com/Biuni/PokemonGO-Pokedex/master/pokedex.json";
 
   PokeHub pokeHub;
@@ -27,8 +30,9 @@ class MyHomePageState extends State<MyHomePage> {
   fetchData() async {
     var res = await http.get(url);
     var decodedJson = jsonDecode(res.body); // recebe formato JSON
-    // print(res.body);
     pokeHub = PokeHub.fromJson(decodedJson); // Json é inserido no nosso Model pokemon
+
+    setState(() {}); // 30:05
   }
 
   @override
@@ -36,24 +40,33 @@ class MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('PokApp'),
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: magenta,
       ),
-      body: GridView.count(
+      body: pokeHub == null ? Center(
+        child: CircularProgressIndicator(),
+      ) 
+      : GridView.count(
         crossAxisCount: 2, // duas colunas
         children: pokeHub.pokemon.map((poke) => Padding(
           padding: const EdgeInsets.all(2.0),
           child: Card(
+            elevation: 3,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Container(
                   height: 100,
                   width: 100,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: NetworkImage(poke.img) // 26:34
+                      image: NetworkImage(poke.img)
                     )
                   ),
-                )
+                ),
+                Text(
+                  poke.name, 
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
               ],
             ),
           ),
@@ -62,7 +75,7 @@ class MyHomePageState extends State<MyHomePage> {
       drawer: Drawer(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        backgroundColor: Colors.deepPurple,
+        backgroundColor: magenta,
         child: Icon(Icons.refresh),
       ),
     );
