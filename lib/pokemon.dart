@@ -32,8 +32,8 @@ class Pokemon {
   String candy;
   int candyCount;
   String egg;
-  double spawnChance;
-  int avgSpawns;
+  String spawnChance;
+  String avgSpawns;
   String spawnTime;
   List<double> multipliers;
   List<String> weaknesses;
@@ -68,10 +68,10 @@ class Pokemon {
     candy = json['candy'];
     candyCount = json['candy_count'];
     egg = json['egg'];
-    spawnChance = json['spawn_chance'];
-    avgSpawns = json['avg_spawns'];
+    spawnChance = json['spawn_chance'].toString();
+    avgSpawns = json['avg_spawns'].toString();
     spawnTime = json['spawn_time'];
-    multipliers = json['multipliers'].cast<double>();
+    multipliers = json['multipliers']?.cast<double>();
     weaknesses = json['weaknesses'].cast<String>();
     if (json['next_evolution'] != null) {
       nextEvolution = new List<NextEvolution>();

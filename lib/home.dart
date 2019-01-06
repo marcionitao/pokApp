@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'package:pokapp/pokemon.dart';
 
 class MyHomePage extends StatefulWidget {
   @override
@@ -12,7 +15,8 @@ class MyHomePageState extends State<MyHomePage> {
 
   var url = "https://raw.githubusercontent.com/Biuni/PokemonGO-Pokedex/master/pokedex.json";
 
-  // 16:11
+  PokeHub pokeHub;
+  
   @override
   void initState() {
     super.initState();
@@ -21,7 +25,10 @@ class MyHomePageState extends State<MyHomePage> {
   }
 
   fetchData() async {
-
+    var res = await http.get(url);
+    var decodedJson = jsonDecode(res.body); // recebe formato JSON
+    // print(res.body);
+    pokeHub = PokeHub.fromJson(decodedJson); // Json é inserido no nosso Model pokemon
   }
 
   @override
@@ -31,8 +38,26 @@ class MyHomePageState extends State<MyHomePage> {
         title: Text('PokApp'),
         backgroundColor: Colors.deepPurple,
       ),
-      body: Center(
-        child: Text('Hallo!'),
+      body: GridView.count(
+        crossAxisCount: 2, // duas colunas
+        children: pokeHub.pokemon.map((poke) => Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Card(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  height: 100,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: NetworkImage(poke.img) // 26:34
+                    )
+                  ),
+                )
+              ],
+            ),
+          ),
+        )).toList(),
       ),
       drawer: Drawer(),
       floatingActionButton: FloatingActionButton(
